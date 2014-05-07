@@ -1,25 +1,8 @@
-.PHONY: clean deps distclean doc dyalyzer test
+PROJECT = ej
 
-# allow rebar binary to be set via environment variable
-REBAR ?= rebar
+ERLC_OPTS = +debug_info +warn_export_all +warn_export_vars +warn_shadow_vars +warn_obsolete_guard
 
-all:
-	@$(REBAR) compile
+PLT_APPS = hipe sasl mnesia crypto compiler syntax_tools
+DIALYZER_OPTS = -Werror_handling -Wrace_conditions -Wunmatched_returns | fgrep -v -f ./dialyzer.ignore-warning
 
-dialyzer: all
-	@dialyzer -Wunderspecs -r ebin
-
-test:
-	@$(REBAR) eunit
-
-deps:
-	@$(REBAR) get-deps
-
-clean:
-	@$(REBAR) clean
-
-distclean: clean
-	@$(REBAR) delete-deps
-
-doc:
-	@$(REBAR) doc
+include erlang.mk
